@@ -42,7 +42,8 @@ VlnPlot(
 plot1 <- FeatureScatter(
   bh_data, feature1 = "nCount_Spatial", feature2 = "nFeature_Spatial") + NoLegend()
 plot1
-
+#filtering if we have huge data
+'''
 bh_subset <- subset(
   bh_data, 
   subset = nFeature_Spatial < 8000 & nFeature_Spatial > 1000 & 
@@ -50,13 +51,14 @@ bh_subset <- subset(
 
 print(paste("Filter out", ncol(bh_data) - ncol(bh_subset), 
             "samples because of the outlier QC metrics, with", ncol(bh_subset),
-            "samples left."))
+            "samples left.")) '''
+
 SpatialFeaturePlot(
   bh_subset, features = c("nFeature_Spatial", "nCount_Spatial")) &
   theme(legend.position = "bottom")  
 
 #scaling,normalization,dimension reduction
-brain_norm <- SCTransform(bh_subset, assay = "Spatial", verbose = FALSE)
+brain_norm <- SCTransform(bh_data, assay = "Spatial", verbose = FALSE)
 brain_obj <- RunPCA(brain_norm, assay = "SCT", verbose = FALSE)
 # compute K nearest neighbors (KNN)
 brain_obj <- FindNeighbors(brain_obj, reduction = "pca", dims = 1:30)
