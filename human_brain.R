@@ -92,10 +92,9 @@ fs <- c("CSNK2A1","CSNK2A2","CSNK2B")
 
 features <- c("CSNK2A1","CSNK2A2","COPS2","TP53","CSNK2B","PTEN","SSRP1")  # Specify the feature names
 #single cell distribution in each cluster
-VlnPlot(object = brain_obj,features = c("TP53")) + geom_boxplot()
+#VlnPlot(object = brain_obj,features = c("TP53")) + geom_boxplot()
 DotPlot(brain_obj, features = features)
-SpatialFeaturePlot(brain_moransi, features = features, ncol = 3, alpha = c(0.1, 1))
-RidgePlot(brain_obj, features = fs, ncol = 2)
+#RidgePlot(brain_obj, features = fs, ncol = 2)
 
 #gene expression found in human brain
 SpatialFeaturePlot(brain_obj,fs,alpha = c(0.1, 1))
