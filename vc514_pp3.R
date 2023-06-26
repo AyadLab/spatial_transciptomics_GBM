@@ -58,6 +58,9 @@ ifnb.list <- PrepSCTIntegration(object.list = ifnb.list, anchor.features = featu
 # add in anchor based integration
 ifnb.anchors <- FindIntegrationAnchors(ifnb.list, normalization.method = "SCT", anchor.features = features)
 combined <- IntegrateData(anchorset = ifnb.anchors, normalization.method = "SCT")
+#we can integrate data with genes list ,so that it appears in the plots,for that use below line to create the seurat object 
+#combined <- IntegrateData(anchorset = ifnb.anchors, normalization.method = "SCT",features.to.integrate = rownames(ifnb.list[[1]]))
+
 #combined
 saveRDS(combined, file = "brain.rds")
 #loading the integrated seurat file to do analysis as a single cell pipeline
@@ -78,6 +81,33 @@ brain.combined.sct@reductions
 table(brain.combined.sct@active.ident)
 brain_obj_markers <- FindAllMarkers(brain.combined.sct, only.pos = TRUE, min.pct = 0.25, 
                                     logfc.threshold = 0.25)
+
+brain.combined.sct
+Barcodes <- as.data.frame(colnames(brain.combined.sct))
+colnames(Barcodes) <- c('Barcodes')
+colnames(Barcodes)
+for (i in 1:length(rownames(Barcodes))){
+    Barcodes$slide_id[i] <- unlist(strsplit(Barcodes$Barcodes[i], split = '_', fixed = TRUE))[length(unlist(strsplit(Barcodes$Barcodes[i], split = '_', fixed = TRUE)))]
+}
+rownames(Barcodes) <- Barcodes$Barcodes
+Barcodes$Barcodes <- NULL
+Barcodes
+brain.combined.sct <- AddMetaData(brain.combined.sct,metadata = Barcodes) 
+table(brain.combined.sct$slide_id,brain.combined.sct$seurat_clusters) 
+#To see how the object is divided into clusters and which images are used  
+#colnames(ifnb.list[[1]])
+comb_meta <- brain.combined.sct@meta.data
+slide1_meta <- subset(comb_meta,comb_meta$slide_id == 1)
+slide1_meta  
+for (i in 1:length(rownames(slide1_meta))){
+  slide1_meta$newrownames[i] <- unlist(strsplit(rownames(slide1_meta)[i], split = '_', fixed = TRUE))[1]
+}
+rownames(slide1_meta) <- slide1_meta$newrownames
+slide1_meta$newrownames <- NULL
+ifnb.list[[1]] <- AddMetaData(ifnb.list[[1]],metadata = slide1_meta)
+ifnb.list[[1]]
+
+
 brain_obj_markers %>%
   group_by(cluster) %>%
   slice_max(n = 2, order_by = avg_log2FC)
