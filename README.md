@@ -17,6 +17,4 @@ DESCRIPTION :
 # packages used :
 1. Seurat : to deal with spatial images.
 2. STdeconvolve (unsupervised algorithm) : deconvolution of images(integrated)
-3. msigdbr : database(human) used for enrichment analysis to find pathways
-
-
+3. msigdbr : database(human) used for enrichment analysis to find spatail pathways of each brain tissue using GESECA analysis
